@@ -1,27 +1,27 @@
-from typing import Dict, List
-from .graph import Node
+from typing import List
+from .graph import State, Graph
+from .node import Node
 
-def bfs(tree: Dict[str, Node], start: Node, target: Node):
-    edge: List[Node] = [start]
+def backtrack_path(node: Node) -> None:
+    if node.dad is None:
+        return
+    backtrack_path(node.dad)
+    print(node.state.city, node.cost)
+
+
+def bfs(graph: Graph, origin: State, target: State) -> bool:
+    edge: List[Node] = [Node.state2node(origin)]
     explored: List[Node] = []
-
-    def backtrack_path(node: Node) -> None:
-        if node.dad is None:
-            return node.cost
-        cost = node.cost + backtrack_path(node.dad)
-        print(node.value, cost)
-        return cost
-
+    
     while(True):
         if len(edge) == 0: return False
         node = edge.pop(0)
-        node.childs = tree[node.value].childs
         explored.append(node)
 
-        for child in node.childs:
-            child.dad = node
+        for adj in node.state.adjs:
+            child = Node(graph[adj.state], adj.cost + node.cost, node)
             if child not in [*explored, *edge]:
-                if child.value == target.value:
+                if child.state == target.city:
                     backtrack_path(child)
                     return True
                 edge.append(child)

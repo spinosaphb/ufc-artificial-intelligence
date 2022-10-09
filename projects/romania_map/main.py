@@ -11,7 +11,8 @@ if __name__ == "__main__":
         map_ = json.load(file)
     
     graph = Graph.dict2graph(map_)
-    tree = graph.graph2tree()
+    
+    print(graph)
     
     def show_map():
         dashes = show_line("Romenia Map")
@@ -30,5 +31,5 @@ if __name__ == "__main__":
         print("Origin or Target does not in map!\n")
         get_data()
     show_line('Path', False)
-    bfs(tree, tree[origin], tree[target])
+    bfs(graph, graph[origin], graph[target])
 
