@@ -18,7 +18,7 @@
     },
     "Sibiu": {
         "Fagaras": 99,
-        "RimnicuVilcea": 80,
+        "Rimnicu Vilcea": 80,
         "Oradea": 151,
         "Arad": 140
     },
@@ -35,11 +35,11 @@
         "Craiova": 120
     },
     "Craiova": {
-        "RimnicuVilcea": 146,
+        "Rimnicu Vilcea": 146,
         "Pitesti": 138,
         "Drobeta": 120
     },
-    "RimnicuVilcea": {
+    "Rimnicu Vilcea": {
         "Sibiu": 80,
         "Pitesti": 97,
         "Craiova": 146
@@ -49,7 +49,7 @@
         "Bucharest": 211
     },
     "Pitesti": {
-        "RimnicuVilcea": 97,
+        "Rimnicu Vilcea": 97,
         "Craiova": 138,
         "Bucharest": 101
     },

@@ -10,6 +10,10 @@ def backtrack_path(node: Node) -> None:
 
 
 def bfs(graph: Graph, origin: State, target: State) -> bool:
+    """
+    Breath-firsth search
+    ---
+    """
     edge: List[Node] = [Node.state2node(origin)]
     explored: List[Node] = []
     

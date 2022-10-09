@@ -1,35 +1,30 @@
 import json
 from map_ import Graph, bfs
-from config import load_path, MAP_PATH
-load_path()
-from utils import show_line
-from pprint import pprint
+from config import MAP_PATH
+import sys
+from core import flow, format_name
 
 if __name__ == "__main__":
-
     with open(MAP_PATH, 'r') as file:
-        map_ = json.load(file)
+        map_: dict = json.load(file)
     
     graph = Graph.dict2graph(map_)
-    
-    print(graph)
-    
-    def show_map():
-        dashes = show_line("Romenia Map")
-        pprint(map_)
-        print(dashes)
-    show_map()
 
-    def get_data():
-        global origin, target
-        origin = input("origin: ").capitalize()    
-        target = input("target: ").capitalize()
-    get_data()
+    origin, target = None, None
+
+    def format_name_(*args, **kwargs): return format_name(map_, *args, **kwargs)
+    def flow_(*args, **kwargs): return flow(map_, *args, **kwargs)
+
+    match len(sys.argv):
+        case 1:
+            print(graph)
+            origin, target = flow_()
+        case 2:
+            origin = format_name_(sys.argv[1])
+            _, target = flow_(get_origin=False)
+        case 3:
+            origin, target = map(format_name_, sys.argv[1:])
+        case _:
+            raise RuntimeError("Many arguments!")
     
-    while not((origin in map_) and (target in map_)):
-        show_map()
-        print("Origin or Target does not in map!\n")
-        get_data()
-    show_line('Path', False)
     bfs(graph, graph[origin], graph[target])
-
