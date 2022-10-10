@@ -1,5 +1,4 @@
 import os, sys
-from os.path import dirname
 def load_path():
     abs_path = os.path.abspath(os.curdir)
     project_dir = os.path.dirname(abs_path)

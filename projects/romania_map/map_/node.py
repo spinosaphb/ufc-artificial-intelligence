@@ -16,6 +16,16 @@ class Node:
             return __o.state == self.state
         else: raise TypeError()
 
+    def __le__(self, __o: 'Node') -> bool:
+        if not isinstance(__o, Node):
+           raise TypeError()
+        return self.cost <= __o.cost
+
+    def __lt__(self, __o: 'Node') -> bool:
+        if not isinstance(__o, Node):
+           raise TypeError()
+        return self.cost < __o.cost 
+
     @classmethod
     def state2node(cls, state: State) -> 'Node':
         if not isinstance(state, State):

@@ -1,8 +1,10 @@
 import json
-from map_ import Graph, bfs
+from map_ import Graph
+from map_.search import bfs, ucs
 from config import MAP_PATH
 import sys
 from core import flow, format_name
+from utils import show_line
 
 if __name__ == "__main__":
     with open(MAP_PATH, 'r') as file:
@@ -27,4 +29,8 @@ if __name__ == "__main__":
         case _:
             raise RuntimeError("Many arguments!")
     
+    show_line("Breadth-first search", clear=False)
     bfs(graph, graph[origin], graph[target])
+    show_line("Uniform-cost search", clear=False)
+    ucs(graph, graph[origin], graph[target])
+    show_line("", clear=False)
