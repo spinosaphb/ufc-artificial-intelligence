@@ -1,8 +1,8 @@
+import sys
 import json
 from map_ import Graph
-from map_.search import bfs, ucs
+from map_.search import Searcher
 from config import MAP_PATH
-import sys
 from core import flow, format_name
 from utils import show_line
 
@@ -29,8 +29,19 @@ if __name__ == "__main__":
         case _:
             raise RuntimeError("Many arguments!")
     
-    show_line("Breadth-first search", clear=False)
-    bfs(graph, graph[origin], graph[target])
-    show_line("Uniform-cost search", clear=False)
-    ucs(graph, graph[origin], graph[target])
+    origin_state, target_state = graph[origin], graph[target]
+
+    searcher = Searcher(graph)
+    searcher.origin = graph[origin]
+    searcher.target = graph[target]
+    
+    algorithms = {
+        'breath': 'Breadth-first search',
+        'uniform': 'Uniform-cost search',
+        'deep': 'Deep-first search'
+    }
+    
+    for f, agtm_name  in algorithms.items():
+        show_line(agtm_name, clear=False)
+        searcher.search(f)
     show_line("", clear=False)

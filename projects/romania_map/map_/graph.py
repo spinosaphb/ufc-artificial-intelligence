@@ -1,7 +1,8 @@
 
 from dataclasses import dataclass
 from itertools import starmap
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
+
 """
 Module for classes of graph
 """
@@ -41,5 +42,5 @@ class State:
 
 @dataclass
 class Transiction:
-    state: str
+    state_name: str
     cost: int 

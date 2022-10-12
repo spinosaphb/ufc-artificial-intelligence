@@ -1,4 +1,3 @@
-from ctypes import Union
 from dataclasses import dataclass
 from typing import Optional
 from .graph import State
@@ -6,8 +5,8 @@ from .graph import State
 @dataclass
 class Node:
     state: State
-    cost: Optional[int] 
-    dad: Optional['Node']
+    cost: int = 0
+    dad: 'Node' = None
 
     def __eq__(self, __o) -> bool:
         if isinstance(__o, State):
@@ -25,9 +24,3 @@ class Node:
         if not isinstance(__o, Node):
            raise TypeError()
         return self.cost < __o.cost 
-
-    @classmethod
-    def state2node(cls, state: State) -> 'Node':
-        if not isinstance(state, State):
-            raise TypeError(f"Type {type(state)} is not valid")
-        return Node(state, 0, None)

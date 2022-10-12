@@ -3,8 +3,8 @@ from typing import Any
 
 class PriorityQueue(list):
 
-    def __init__(self, iterable: list = list()) -> None:
-        self.pqueue: list = iterable
+    def __init__(self, *elem: object) -> None:
+        self.pqueue: list = list(elem)
         heapq.heapify(self.pqueue)
 
     def pop(self): return heapq.heappop(self.pqueue)
