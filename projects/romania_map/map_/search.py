@@ -1,8 +1,12 @@
 from dataclasses import dataclass
-from typing import Callable, List
+from typing import Callable, Dict, Iterable, List
 from .graph import State, Graph, Transiction
 from .node import Node
 from .pqueue import PriorityQueue
+
+from config import load_path
+load_path()
+from utils import show_line
 
 def _backtrack_path(node: Node) -> None:
     if node.dad is None:
@@ -19,8 +23,20 @@ def _trn2node(graph: Graph, dad: Node = None) -> Callable[[Transiction], Node]:
     )
     
 
-def childs(node: Node, graph: Graph):
+def _childs(node: Node, graph: Graph):
     return map(_trn2node(graph, node), node.state.adjs)
+
+
+def _make_heuristic_fn(cost_map: Dict[str, int]) -> Callable[[Node], int]:
+    return lambda node: cost_map[node.state.city] 
+
+def _make_cost_fn() -> Callable[[Node], int]:
+    return lambda node: node.cost
+
+def _show_info_search(edge: Iterable, explored: Iterable, i: int):
+    show_line(
+        f"Edge rest: {len(edge)} | Explored: {len(explored)} | Iter: {i}", clear=False)
+    
 
 def bfs(graph: Graph, origin: State, target: State) -> bool:
     """
@@ -30,33 +46,42 @@ def bfs(graph: Graph, origin: State, target: State) -> bool:
     edge: List[Node] = [Node(origin)]
     explored: List[Node] = []
     
+    i: int = 0
     while True:
+        i += 1
         if len(edge) == 0: return False
         node = edge.pop(0)
         explored.append(node)
-        for child in childs(node, graph):
+        for child in _childs(node, graph):
             if child not in [*explored, *edge]:
                 if child.state == target.city:
+                    _show_info_search(edge, explored, i)
                     _backtrack_path(child)
                     return True
                 edge.append(child)
 
-def ucs(graph: Graph, origin: State, target: State) -> bool:
+def ucs(
+    graph: Graph,
+    origin: State,
+    target: State,
+    fn: Callable[[Node], int] = None) -> bool:
     """
     Uniform-cost search
     ---
     """
-    edge: PriorityQueue = PriorityQueue(Node(origin))
+    edge: PriorityQueue = PriorityQueue([Node(origin)], fn)
     explored: List[Node] = []
-
+    i: int = 0
     while True:
+        i += 1
         if len(edge) == 0: return False
         node: Node = edge.pop()
         if node.state == target.city:
+            _show_info_search(edge, explored, i)
             _backtrack_path(node)
             return True
         explored.append(node)
-        for child in childs(node, graph):
+        for child in _childs(node, graph):
             if child not in [*explored, *edge]:
                 edge.put(child)
             elif child in edge:
@@ -68,17 +93,45 @@ def dfs(graph: Graph, origin: State, target: State) -> bool:
     """
     edge: List['Node'] = [Node(origin)]
     explored: List[Node] = []
-    
+    i: int = 0
     while True:
+        i += 1
         if len(edge) == 0: return False
         node: Node = edge.pop()
         explored.append(node)
-        for child in childs(node, graph):
+        for child in _childs(node, graph):
             if child not in [*explored, *edge]:
                 if child.state == target.city:
+                    _show_info_search(edge, explored, i)
                     _backtrack_path(child)
                     return True
                 edge.append(child)
+
+
+def greedy_search(
+    graph: Graph,
+    origin: State,
+    target: State,
+    cost_map_: dict[str, int]) -> bool:
+    """
+    Greedy Search
+    """
+    h_fn = _make_heuristic_fn(cost_map_)
+
+    return ucs(graph, origin, target, h_fn)
+
+
+def astar_search(
+    graph: Graph,
+    origin: State,
+    target: State,
+    cost_map_: dict[str, int]) -> bool:
+
+    h_fn = _make_heuristic_fn(cost_map_)
+    g_fn = _make_cost_fn()
+    
+    return ucs(graph, origin, target, lambda n: h_fn(n) + g_fn(n))   
+
 
 @dataclass
 class Searcher:

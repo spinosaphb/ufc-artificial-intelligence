@@ -5,6 +5,7 @@ def load_path():
     sys.path.append(project_dir)
 
 MAP_PATH = "romenia.json"
+COST_MAP_PATH = "cost_map_romenia.json"
 
 DEFAULT_ORIGIN = "Arad"
 DEFAULT_TARGET = "Bucharest"
