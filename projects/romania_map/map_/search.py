@@ -15,7 +15,6 @@ def _backtrack_path(node: Node) -> List[Dict[str, Any]]:
     if node.dad is None:
         return [(node.state.city, node.cost)]
     return [*_backtrack_path(node.dad), (node.state.city, node.cost)]
-    print(node.state.city, node.cost)
 
 
 def _trn2node(graph: Graph, dad: Node = None) -> Callable[[Transiction], Node]:
@@ -56,9 +55,10 @@ def normal_search(graph: Graph, origin: State, target: State, popidx) -> bool:
         explored.append(node)
         for child in filter(_notin([*explored, *edge]), _childs(node, graph)):
             if child.state == target.city:
-                #_show_info_search(edge, explored, i)
-                return _backtrack_path(child)
-                return True
+                path = _backtrack_path(child) 
+                from pprint import pprint
+                pprint(path)
+                return path
             edge.append(child)
 
 def priority_search(
@@ -67,7 +67,7 @@ def priority_search(
     target: State,
     fn: Callable[[Node], int] = None) -> bool:
     """
-    Uniform-cost search
+    Uniform-cost, Greedy, A* search
     ---
     """
     edge: PriorityQueue = PriorityQueue([Node(origin)], fn)
@@ -76,8 +76,10 @@ def priority_search(
         if len(edge) == 0: return False
         node: Node = edge.pop()
         if node.state == target.city:
-            return _backtrack_path(node)
-            return True
+            path = _backtrack_path(node) 
+            from pprint import pprint
+            pprint(path)
+            return path
         explored.append(node)
         for child in _childs(node, graph):
             if child not in [*explored, *edge]:
